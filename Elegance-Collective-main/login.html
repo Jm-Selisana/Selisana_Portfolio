@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login and Sign Up</title>
+  <link rel="icon" href="img/logoo.png" type="image/x-icon"> <!-- Favicon Link -->
+  <style>
+ body {
+  font-family: 'Century Gothic', sans-serif;
+  background: linear-gradient(to bottom, rgba(207, 229, 255, 0.7), rgba(124, 16, 52, 0.7), rgba(37, 47, 156, 0.8));
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+  flex-direction: column;
+}
+
+.form-container {
+  background-color: rgba(255, 255, 255, 0.3); /* Semi-transparent white background */
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+  position: relative;
+}
+
+h2 {
+  margin-bottom: 20px;
+  color: #252f9c; /* Dark Blue */
+}
+
+.form-group {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 12px 40px; /* Add padding for icons */
+  margin: 0;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 16px;
+  box-sizing: border-box; /* Ensure consistent sizing */
+}
+
+.form-group .icon {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 18px;
+  color: #666;
+}
+
+button {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  background-color: #7c1034; /* Deep Red */
+  color: white;
+  font-size: 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+button:hover {
+  background-color: #ff3d5c; /* Lighter Red */
+}
+
+#status-box {
+  background-color: rgba(255, 255, 255, 0.2); /* White background with 20% opacity */
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  width: 70%;
+  max-width: 350px;
+  margin-top: 20px; /* Space between form and status box */
+  display: none; /* Hidden by default */
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  margin: 20px auto; /* Centers the box horizontally and adds space */
+}
+
+.success-message {
+  font-size: 18px;
+  font-weight: bold;
+  color: #000000;  /* Black color */
+  text-align: center;
+}
+
+.success-image {
+  width: 70px;  /* Adjust the size of the image */
+  height: 70px;
+  margin-top: 15px;  /* Adjust the spacing between the text and the image */
+}
+
+.loading-spinner {
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  border-top: 4px solid #7c1034; /* Red spinner color */
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  animation: spin 1s linear infinite;
+  margin: 0 auto;
+  display: none; /* Initially hidden */
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.form-toggle {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+button.toggle-btn {
+  width: 80%;
+  padding: 10px;
+  border: 1px solid #252f9c; /* Dark Blue */
+  background-color: white;
+  color: #252f9c;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button.toggle-btn:hover {
+  background-color: #252f9c;
+  color: white;
+}
+
+.form-group {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+#toggle-password {
+  cursor: pointer;
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 18px;
+}
+
+/* New Section for Aligning Remember Me and Forgot Password */
+.form-check,
+.forgot-password {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; /* Align items to the left */
+  gap: 10px;
+  font-size: 14px;
+  color: #000000;
+  margin-top: 10px;
+}
+
+.forgot-password {
+  display: flex;
+  justify-content: center; /* Center horizontally */
+  width: 100%; /* Ensure it takes up the full width */
+  margin-top: 10px; /* Optional: Adjusts space above */
+}
+
+.forgot-password a {
+  color: #252f9c;
+  text-decoration: none;
+}
+
+.forgot-password a:hover {
+  text-decoration: underline;
+}
+
+</style>
+</head>
+<body>
+  <div class="form-container">
+    <!-- Logo Image inside form-container -->
+    <img src="img/logoo.png" alt="Logo" style="width: 150px; margin-bottom: 20px;"> <!-- Add your logo image here -->
+
+    <div id="status-box" class="status-box">
+      <div id="loading-spinner" class="loading-spinner"></div>
+      <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%;">
+        <div id="success-message" class="success-message">
+          BOSS??....... BILI KANA
+        </div>
+
+        <div>
+          <img id="success-image" class="success-image" src="img/boss.png" alt="Success" style="display: none;">
+        </div>
+      </div>
+    </div>
+
+    <!-- Login Form -->
+<form id="login-form" class="form">
+  <h2>Login</h2>
+  <div class="form-group">
+    <span class="icon">📧</span>
+    <input type="email" id="login-email" placeholder="Email" required />
+  </div>
+  <div class="form-group">
+    <span class="icon">🔒</span>
+    <input type="password" id="login-password" placeholder="Password" required />
+    <!-- Eye Icon to toggle password visibility -->
+    <span id="toggle-password" style="cursor: pointer; position: absolute; right: 10px; top: 50%; transform: translateY(-50%); font-size: 18px;">👁️</span>
+  </div><div class="form-check">
+    <input type="checkbox" id="remember-me">
+    <label for="remember-me">Remember Me</label>
+  </div><br>
+  <button type="submit" class="submit-btn">Login</button>
+  <!-- Remember Me and Forgot Password -->
+  
+  <div class="forgot-password">
+    <a href="#">Forgot your password?</a>
+  </div>
+</form>
+
+
+   <!-- Sign Up Form (Initially Hidden) -->
+<form id="signup-form" class="form" style="display: none;">
+  <h2>Sign Up</h2>
+  <div class="form-group">
+    <!-- Full Name Input with Icon -->
+    <span class="icon">👤</span>
+    <input type="text" id="signup-name" placeholder="Full Name" required />
+  </div>
+  <div class="form-group">
+    <!-- Email Input with Icon -->
+    <span class="icon">📧</span>
+    <input type="email" id="signup-email" placeholder="Email" required />
+  </div>
+  <div class="form-group">
+    <!-- Password Input with Icon and Eye Icon -->
+    <span class="icon">🔒</span>
+    <input type="password" id="signup-password" placeholder="Password" required />
+    <!-- Eye Icon to toggle password visibility -->
+    <span id="toggle-password-signup" style="cursor: pointer; position: absolute; right: 10px; top: 50%; transform: translateY(-50%); font-size: 18px;">👁️</span>
+  </div>
+  <div class="form-check">
+    <input type="checkbox" id="remember-me-signup">
+    <label for="remember-me-signup">Remember Me</label>
+  </div><br>
+  <button type="submit" class="submit-btn">Sign Up</button>
+  <!-- Forgot Password can be added similarly if needed -->
+</form>
+
+
+
+    <!-- Toggle Button -->
+    <div class="form-toggle">
+      <button class="toggle-btn" onclick="toggleForm()">Switch to Sign Up</button>
+    </div>
+  </div>
+
+  <script>
+    function toggleForm() {
+      const loginForm = document.getElementById('login-form');
+      const signupForm = document.getElementById('signup-form');
+      const toggleBtn = document.querySelector('.toggle-btn');
+  
+      if (loginForm.style.display === 'none') {
+        loginForm.style.display = 'block';
+        signupForm.style.display = 'none';
+        toggleBtn.textContent = 'Switch to Sign Up';
+      } else {
+        loginForm.style.display = 'none';
+        signupForm.style.display = 'block';
+        toggleBtn.textContent = 'Switch to Login';
+      }
+    }
+  
+    document.addEventListener('DOMContentLoaded', function () {
+      const loginForm = document.getElementById('login-form');
+      const signupForm = document.getElementById('signup-form');
+      const loadingSpinner = document.getElementById('loading-spinner');
+      const successMessage = document.getElementById('success-message');
+      const successImage = document.getElementById('success-image');
+      const statusBox = document.getElementById('status-box');
+      const toggleBtn = document.querySelector('.toggle-btn');
+      const togglePassword = document.getElementById('toggle-password');
+      const passwordField = document.getElementById('login-password');
+      const togglePasswordSignup = document.getElementById('toggle-password-signup');
+      const passwordFieldSignup = document.getElementById('signup-password');
+  
+      // Initially hide the status box (loading spinner and success message)
+      statusBox.style.display = 'none';
+  
+      // Sign Up form submission
+      signupForm.addEventListener('submit', function (event) {
+        event.preventDefault();
+        alert('Sign Up Successful! You can now log in.');
+        
+        // Hide Sign Up form and show Login form
+        signupForm.style.display = 'none';
+        loginForm.style.display = 'block';
+        toggleBtn.textContent = 'Switch to Sign Up'; // Adjust button text
+      });
+  
+     // Login form submission
+loginForm.addEventListener('submit', function (event) {
+  event.preventDefault();
+
+  // Show the loading spinner
+  statusBox.style.display = 'flex';
+  loadingSpinner.style.display = 'block';
+  successMessage.style.display = 'none';
+  successImage.style.display = 'none';
+
+  // Simulate a delay for loading (2 seconds)
+  setTimeout(function () {
+    // Hide the spinner and show success message and image
+    loadingSpinner.style.display = 'none';
+    successMessage.style.display = 'block';
+    successImage.style.display = 'inline-block'; // Show image
+
+    // Play the AI voice-over saying "BOSS? BILI KANA"
+    const bossUtterance = new SpeechSynthesisUtterance('BOSS? BILI KANA');
+    bossUtterance.lang = 'en-US'; // Set language (adjust if needed)
+    bossUtterance.pitch = 1; // Normal pitch
+    bossUtterance.rate = 1; // Normal speed
+    bossUtterance.volume = 1; // Max volume
+
+    // Speak the first message
+    window.speechSynthesis.speak(bossUtterance);
+
+    // Speak the welcome message after the first finishes
+    bossUtterance.onend = function () {
+      const welcomeUtterance = new SpeechSynthesisUtterance('Welcome to Elegance Shop');
+      welcomeUtterance.lang = 'en-US';
+      welcomeUtterance.pitch = 1;
+      welcomeUtterance.rate = 1;
+      welcomeUtterance.volume = 1;
+
+      // Speak the second message
+      window.speechSynthesis.speak(welcomeUtterance);
+
+      // Redirect after the welcome message finishes
+      welcomeUtterance.onend = function () {
+        window.location.href = 'index.html';
+      };
+    };
+  }, 1200); // 1.2 seconds delay to simulate login process
+});
+
+      // Reset and hide status box when switching between forms
+      const toggleFormAndHideStatusBox = () => {
+        // Reset login form and hide the status box
+        loginForm.style.display = 'block';
+        signupForm.style.display = 'none';
+        toggleBtn.textContent = 'Switch to Sign Up';
+  
+        // Hide the status box
+        statusBox.style.display = 'none';
+        loadingSpinner.style.display = 'none';
+        successMessage.style.display = 'none';
+        successImage.style.display = 'none';
+      };
+  
+      // Password visibility toggle functionality for Login form
+      togglePassword.addEventListener('click', function () {
+        // Toggle password visibility
+        const type = passwordField.type === 'password' ? 'text' : 'password';
+        passwordField.type = type;
+  
+        // Toggle the eye icon (optional, you can change the icon based on visibility)
+        if (type === 'password') {
+          togglePassword.textContent = '👁️'; // Eye closed
+        } else {
+          togglePassword.textContent = '🙈'; // Eye opened
+        }
+      });
+  
+      // Password visibility toggle functionality for Sign Up form
+      togglePasswordSignup.addEventListener('click', function () {
+        // Toggle password visibility
+        const type = passwordFieldSignup.type === 'password' ? 'text' : 'password';
+        passwordFieldSignup.type = type;
+  
+        // Toggle the eye icon (optional, you can change the icon based on visibility)
+        if (type === 'password') {
+          togglePasswordSignup.textContent = '👁️'; // Eye closed
+        } else {
+          togglePasswordSignup.textContent = '🙈'; // Eye opened
+        }
+      });
+    });
+  </script>
+  
+  
+  
+</body>
+</html>
